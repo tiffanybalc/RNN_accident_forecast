@@ -99,11 +99,11 @@ class RecurrentNeuralNetwork:
                     no_acc_predict_cnt += 1
 
 
-        # 有事故，预测成功的准确率
+        # deleted comment
         acc_accuracy = float(acc_predict_cnt)/acc_cnt
         no_acc_accuracy = float(no_acc_predict_cnt)/no_acc_cnt
 
-        # 无事故，预测成功的准确率
+        # deleted comment
         print("no_acc_predict_cnt=%d, acc_predict_cnt=%d"%(no_acc_cnt, acc_cnt))
         print("predict no_acc_predict_cnt=%d, acc_predict_cnt=%d"%(no_acc_predict_cnt, acc_predict_cnt))
         print("acc accuracy= %f"% acc_accuracy)
@@ -136,8 +136,8 @@ def data_import(file, delimiter=','):
 if __name__ == "__main__":
     # convert_data("./data/4hours.csv", "./data/4hours2.csv")
     # convert_data("./data/2hours.csv", "./data/2hours2.csv")
-    train_x, train_y = data_import("/Users/zzf/Desktop/test/4hours-training.csv")
-    test_x, test_y = data_import("/Users/zzf/Desktop/test/4hours-test.csv")
+    train_x, train_y = data_import("/Users/tiffanybalcarcel/git/RNN_accident_forecast/4hours-training.csv")
+    test_x, test_y = data_import("/Users/tiffanybalcarcel/git/RNN_accident_forecast/4hours-test.csv")
     nn = RecurrentNeuralNetwork()
     nn.test(train_x, train_y, test_x, test_y, batch_n=1, epochs=8)
     

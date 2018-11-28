@@ -58,10 +58,11 @@ def convert_data(srcFile, dstFile, interal=2):
             ac_time = ""
             try:
                 ac_time = datetime.datetime.strptime(values[0], "%d/%m/%Y %H:%M")
-            except Exception, e1:
+            #changed both exception syntax below
+            except Exception as e1:
                 try:
                     ac_time = datetime.datetime.strptime(values[0], "%H:%M %d/%m/%Y")
-                except Exception, e2:
+                except Exception as e2:
                     continue
 
             strWeek = "0,0"
@@ -123,12 +124,13 @@ class AccStatistics:
         dict_description = dict(zip(cols_all,description_vector))
         cols_choose=config["cols"]
         
-        print "The Configuration vector used:"
-        print "{"
+        #changed print statements
+        print ("The Configuration vector used:")
+        print ("{")
         for i in range(len(cols_choose)):
             if cols_choose[i] in cols_all:
-                print dict_description[cols_choose[i]]
-        print "}"
+                print (dict_description[cols_choose[i]])
+        print ("}")
 
         print ('Total number of accidents: {%d}' % self.total_acc)
         print ('Total number of time frames with accidents: {%d}' % self.total_acc_tframes)
@@ -184,7 +186,7 @@ class RecurrentNeuralNetwork:
         self.trainer = tf.train.GradientDescentOptimizer(learning_rate=learning_rate).minimize(self.loss)
 
         initer = tf.global_variables_initializer()
-        writer = tf.train.SummaryWriter("/Users/zzf/Desktop/test/rnn/graph-rnn", self.session.graph)
+        writer = tf.train.SummaryWriter("/Users/tiffanybalcarcel/git/RNN_accident_forecast/rnn/graph-rnn", self.session.graph)
 
         tf.scalar_summary("loss", self.loss)
         merged_summary = tf.merge_all_summaries()
@@ -206,7 +208,7 @@ class RecurrentNeuralNetwork:
 
                 writer.add_summary(summary, idx + epoch * total_seq)
 
-    def test(self, test_x, test_y, batch_n, headers, times, out_file="/Users/zzf/Desktop/test/rnn/data/result.csv"):
+    def test(self, test_x, test_y, batch_n, headers, times, out_file="/Users/tiffanybalcarcel/git/RNN_accident_forecast/rnn/data/result.csv"):
         
 
         residual_nonaccident = 0.05
@@ -302,17 +304,17 @@ def data_import(file, delimiter=',', cols=(), normalize_cols=()):
 
 if __name__ == "__main__":
     print("--> prepare data")
-    if not os.path.exists("/Users/zzf/Desktop/test/rnn/data/4hours2.csv"):
-        convert_data("/Users/zzf/Desktop/test/rnn/data/4hours.csv", "/Users/zzf/Desktop/test/rnn/data/4hours2.csv")
-    if not os.path.exists("/Users/zzf/Desktop/test/rnn/data/2hours2.csv"):
-        convert_data("/Users/zzf/Desktop/test/rnn/data/2hours.csv", "/Users/zzf/Desktop/test/rnn/data/2hours2.csv")
+    if not os.path.exists("/Users/tiffanybalcarcel/git/RNN_accident_forecast/rnn/data/4hours2.csv"):
+        convert_data("/Users/tiffanybalcarcel/git/RNN_accident_forecast/rnn/data/4hours.csv", "/Users/tiffanybalcarcel/git/RNN_accident_forecast/rnn/data/4hours2.csv")
+    if not os.path.exists("/Users/tiffanybalcarcel/git/RNN_accident_forecast/rnn/data/2hours2.csv"):
+        convert_data("/Users/tiffanybalcarcel/git/RNN_accident_forecast/rnn/data/2hours.csv", "/Users/tiffanybalcarcel/git/RNN_accident_forecast/rnn/data/2hours2.csv")
     dataset = {
         "train_4hours": "./data/4hours-training.csv",
         "test_4hours": "./data/4hours-test.csv",
         "train_2hours": "./data/2hours-training.csv",
         "test_2hours": "./data/2hours-test.csv",
-        "4hours": "/Users/zzf/Desktop/test/rnn/data/4hours2.csv",
-        "2hours": "/Users/zzf/Desktop/test/rnn/data/2hours2.csv",
+        "4hours": "/Users/tiffanybalcarcel/git/RNN_accident_forecast/rnn/data/4hours2.csv",
+        "2hours": "/Users/tiffanybalcarcel/git/RNN_accident_forecast/rnn/data/2hours2.csv",
     }
     config = {
         "batch_n": 1,

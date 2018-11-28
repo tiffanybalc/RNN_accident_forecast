@@ -1,4 +1,3 @@
 eclipse.preferences.version=1
 encoding/accident_predict_ann.py=utf-8
-encoding/accident_prediction_ann.py=utf-8
-encoding/accident_prediction_rnn.py=utf-8
+encoding/accident_predict_rnn.py=utf-8
