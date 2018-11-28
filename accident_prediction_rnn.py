@@ -312,8 +312,8 @@ if __name__ == "__main__":
         "test_4hours": "./data/4hours-test.csv",
         "train_2hours": "./data/2hours-training.csv",
         "test_2hours": "./data/2hours-test.csv",
-        "4hours": "/Users/tiffanybalcarcel/git/RNN_accident_forecast/data/4hours2.csv",
-        "2hours": "/Users/tiffanybalcarcel/git/RNN_accident_forecast/data/2hours2.csv",
+        "4hours": "/Users/tiffanybalcarcel/git/RNN_accident_forecast/rnn/data/4hours2.csv",
+        "2hours": "/Users/tiffanybalcarcel/git/RNN_accident_forecast/rnn/data/2hours2.csv",
     }
     config = {
         "batch_n": 1,
