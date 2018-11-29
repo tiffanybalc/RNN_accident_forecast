@@ -55,7 +55,8 @@ class RecurrentNeuralNetwork:
 
 
         initer = tf.global_variables_initializer()
-        writer = tf.train.SummaryWriter("./graph", self.session.graph)
+        #writer = tf.train.SummaryWriter("./graph", self.session.graph)
+        writer = tf.summary.FileWriter("./graph", self.session.graph)
 
         tf.scalar_summary("loss", self.loss)
         #tf.scalar_summary("prediction", self.prediction[0][0])
