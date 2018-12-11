@@ -9,7 +9,9 @@ import time
 
 import numpy as np
 import tensorflow as tf
-from tensorflow.python.ops import rnn, rnn_cell
+#from tensorflow.python.ops import rnn, rnn_cell
+from tensorflow.contrib import rnn
+from tensorflow.python.client import device_lib
 
 def progressbar(cur,total):
     percent = '{:.2%}'.format( float(cur)/total)
@@ -31,6 +33,16 @@ class RecurrentNeuralNetwork:
         self.prediction = None
         self.loss = None
         self.trainer = None
+        
+        #added from tensorflow
+        #self._is_training = is_training
+        #self._input = input_
+        self._rnn_params = None
+        self._cell = None
+        #self.batch_size = input_.batch_size
+        #self.num_steps = input_.num_steps
+        #size = config.hidden_size
+        #vocab_size = config.vocab_size
 
     def __del__(self):
         self.session.close()
@@ -39,29 +51,25 @@ class RecurrentNeuralNetwork:
         seq_n = len(train_x)
         input_n = len(train_x[0])
         output_n = len(train_y[0])
-
-        # self.input_layer = tf.placeholder(tf.float32, in_shape)
+        
         self.inputs = tf.placeholder(tf.float32, [batch_n, input_n])
         self.label_layer = tf.placeholder(tf.float32, [output_n])
         self.input_layer = [tf.reshape(i, (1, input_n)) for i in tf.split(0, batch_n, self.inputs)]
-
+        
         self.weights = tf.Variable(tf.random_normal([input_n, output_n]))
         self.biases = tf.Variable(tf.random_normal([output_n]))
         self.prediction = tf.matmul(self.inputs, self.weights) + self.biases
-        #self.loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(self.prediction, self.label_layer))
-        #self.trainer = tf.train.AdamOptimizer(learning_rate=learning_rate).minimize(self.loss)
+        
+        
         self.loss = tf.reduce_mean(tf.square(self.prediction - self.label_layer))
         self.trainer = tf.train.GradientDescentOptimizer(learning_rate=learning_rate).minimize(self.loss)
-
-
+        
         initer = tf.global_variables_initializer()
-        #writer = tf.train.SummaryWriter("./graph", self.session.graph)
+        
         writer = tf.summary.FileWriter("./graph", self.session.graph)
-
+        
         tf.scalar_summary("loss", self.loss)
-        #tf.scalar_summary("prediction", self.prediction[0][0])
         merged_summary = tf.merge_all_summaries()
-
         self.session.run(initer)
         for epoch in range(epochs):
             for idx in range(seq_n):
@@ -89,7 +97,6 @@ class RecurrentNeuralNetwork:
             input_x = test_x[idx:idx + batch_n]
             label_y = test_y[idx]
             predict_y = self.session.run(self.prediction, feed_dict={self.inputs: input_x})
-            #print("line %d:%f %f" % (idx, label_y, predict_y))
             if label_y >= 1.0:
                 acc_cnt += 1
                 if label_y == int(predict_y+0.5):
@@ -100,11 +107,9 @@ class RecurrentNeuralNetwork:
                     no_acc_predict_cnt += 1
 
 
-        # deleted comment
         acc_accuracy = float(acc_predict_cnt)/acc_cnt
         no_acc_accuracy = float(no_acc_predict_cnt)/no_acc_cnt
 
-        # deleted comment
         print("no_acc_predict_cnt=%d, acc_predict_cnt=%d"%(no_acc_cnt, acc_cnt))
         print("predict no_acc_predict_cnt=%d, acc_predict_cnt=%d"%(no_acc_predict_cnt, acc_predict_cnt))
         print("acc accuracy= %f"% acc_accuracy)
@@ -122,6 +127,7 @@ def data_import(file, delimiter=','):
     x_cols = (1, 2, 3, 4, 5, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16)
     y_cols = (0)
     
+    #check below for error
     x = np.genfromtxt(file, delimiter=delimiter, skip_header=True, usecols=x_cols)
     # visibility 4
     x[:,3] = normalize(x[:,3])
@@ -130,8 +136,9 @@ def data_import(file, delimiter=','):
     # wind_dir, ignore
     # x[:,5] = normalize(x[:,5])
 
+    #check below for error
     y = np.genfromtxt(file, delimiter=delimiter, skip_header=True, usecols=y_cols)
-    y = np.array([[value] for value in y])
+    y = np.array([[value] for value in y], dtype=float) #added ", dtype=float32"
     return x, y
 
 if __name__ == "__main__":
